@@ -1,3 +1,10 @@
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_replace_all
+#' @importFrom stringi stri_trans_general
+#' @importFrom purrr
+#' @import dplyr
+#' @import RSelenium
+
 #' @title Format name to url's pattern
 #' @param name Name to format
 #' @return Formated name

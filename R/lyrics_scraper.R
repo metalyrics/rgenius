@@ -1,8 +1,7 @@
 source("./R/constants.R")
-library(RSelenium)
-library(magrittr)
-library(stringr)
-library(stringi)
+source("./R/utils.R")
+source("./R/selenium_wrapper.R")
+
 
 get_music_lyrics <- function(song, artist) {
   remDr <- .open_remDr()
@@ -24,22 +23,22 @@ get_music_lyrics <- function(song, artist) {
 
 .create_lyrics_df <- function(scrape_result) {
   df <- data.frame(scrape_result) %>%
-    dplyr::mutate(breaks = strsplit(as.character(result), "\n"))  %>%
-    dplyr::mutate(verse_list = breaks) %>%
-    tidyr::unnest(breaks) %>%
-    dplyr::mutate(tag = dplyr::if_else(grepl("\\[",breaks), breaks, "")) %>%
-    dplyr::select(-breaks) %>%
+    mutate(breaks = strsplit(as.character(result), "\n"))  %>%
+    mutate(verse_list = breaks) %>%
+    unnest(breaks) %>%
+    mutate(tag = if_else(grepl("\\[",breaks), breaks, "")) %>%
+    select(-breaks) %>%
     unique()
   df[df==""]<-NA
   if (nrow(df %>% na.omit) != 0) {
     df <- df %>% na.omit()  %>%
-      dplyr::select(verse_list, tag) %>%
-      dplyr::mutate(verse_list = purrr::map(verse_list, tail, -1)) %>%
-      dplyr::mutate(tag = str_replace_all(tag, "\\[", "")) %>%
-      dplyr::mutate(tag = str_replace_all(tag, "\\]", ""))
+      select(verse_list, tag) %>%
+      mutate(verse_list = map(verse_list, tail, -1)) %>%
+      mutate(tag = str_replace_all(tag, "\\[", "")) %>%
+      mutate(tag = str_replace_all(tag, "\\]", ""))
   } else {
     df <- df %>%
-      dplyr::select(verse_list, tag)
+      select(verse_list, tag)
   }
 
   return(df)
