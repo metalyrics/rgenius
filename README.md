@@ -32,7 +32,7 @@ Now you're ready to use the package.
 ### Example
 
 ```r
-music_lyrics <- rmetacritic::get_music_lyrics("Lizzo", "Truth Hurts")
+music_lyrics <- rgenius::get_music_lyrics("Lizzo", "Truth Hurts")
 ```
 
 ## Contributors
